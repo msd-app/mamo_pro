@@ -34,4 +34,14 @@ app.get('/dashboard',(req,res)=>{
 res.render('dashboard.ejs');
 });
 
+app.get('/clients',(req,res)=>{
+res.render('clients.ejs');
+});
+
+app.get('/users',(req,res)=>{
+res.render('users.ejs');
+});
+
+
+
 app.listen(4000);
