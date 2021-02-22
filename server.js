@@ -4,6 +4,7 @@ const app = express();
 
 //css、画像の読み込み用
 app.use(express.static('public'));
+
 //POSTで送られたreq.body.[name属性に定義した値]を受け取る
 app.use(express.urlencoded({extended: false}));
 
