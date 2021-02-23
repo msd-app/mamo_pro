@@ -42,6 +42,10 @@ app.get('/users',(req,res)=>{
 res.render('users.ejs');
 });
 
+app.get('/user_new',(req,res)=>{
+res.render('user_new.ejs');
+});
+
 
 
 app.listen(4000);
