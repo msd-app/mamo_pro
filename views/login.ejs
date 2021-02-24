@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="statics/ss/style.css">
+  <title>ログイン</title>
+</head>
+<body>
+  <a href="/dashboard">ダッシュボードへ</a>
+  <a href="/clients">クライアント一覧へ</a>
+  <a href="/users">ユーザー一覧へ</a>
+  <div class="header">
+    <div class="title">テスト</div>
+    <div class="new">
+      <a href="/user_new">新規登録</a>
+    </div>
+  </div>
+  <div class="main">
+    <div class="contents">
+      <form action="/login" method="post">
+        <div class="forms">
+          <input class="box" type="email" name="email" placeholder="E-mail"><br>
+          <input class="box" type="password" name="password" id="" placeholder="PassWord"><br>
+          <input class="btn" type="submit" value="ログイン">
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
+
