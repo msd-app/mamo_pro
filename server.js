@@ -142,6 +142,7 @@ app.get('/admin/:id', (req, res) => {
   )
 });
 
+// 管理者更新
 app.post('/admin/update/:id', (req, res) => {
   const id = req.params.id;
   const email = req.body.email;
@@ -158,9 +159,8 @@ app.post('/admin/update/:id', (req, res) => {
         res.render('admin.ejs', { admin: results[0] });
       }
     )
-    }
-    )
-  });
+  })
+});
 
 
 app.listen(4000);
