@@ -76,4 +76,18 @@ console.log("user "+process.env.DBUSER)
 console.log("password "+process.env.PASSWORD)
 console.log("database "+process.env.DATABASE)
 
+app.post('/user_new',(req,res)=>{
+  const username=req.body.username;
+  const email=req.body.email;
+  const password=req.body.password;
+connection.query(
+  'insert into users(name,email,password) values(?,?,?)',
+  [username,email,password],
+  (error,results)=>{
+    res.redirect('/dashboard');
+  }
+);
+});
+
+
 app.listen(4000);
