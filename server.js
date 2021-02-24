@@ -13,10 +13,10 @@ app.use(express.urlencoded({extended: false}));
 
 //mysqlに接続
 const connection = mysql.createConnection({
-  host: '52.194.222.85',
-  user: 'root',
-  password: 'root',
-  database: 'mamo_db'
+  host: process.env.HOST,
+  user: process.env.DBUSER,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE
 });
 
 connection.connect((err) => {
@@ -70,6 +70,11 @@ res.render('users.ejs');
 app.get('/user_new',(req,res)=>{
 res.render('user_new.ejs');
 });
+
+console.log("host "+process.env.HOST)
+console.log("user "+process.env.DBUSER)
+console.log("password "+process.env.PASSWORD)
+console.log("database "+process.env.DATABASE)
 
 app.post('/user_new',(req,res)=>{
   const username=req.body.username;
