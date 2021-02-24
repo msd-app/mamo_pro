@@ -2,8 +2,13 @@ const express = require('express');
 const mysql = require('mysql');
 const app = express();
 
+// 環境変数
 const dotenv = require('dotenv');
 const result = dotenv.config();
+
+// パスワードハッシュ化
+const bcrypt = require('bcrypt');
+const { raw } = require('body-parser');
 
 //css、画像の読み込み用
 app.use(express.static('public'));
@@ -88,6 +93,74 @@ connection.query(
   }
 );
 });
+
+
+
+// 管理者ルーティング
+
+// 管理者一覧
+app.get('/admins', (req,res) => {
+  connection.query(
+    'SELECT * FROM admins',
+    (error, results) => {
+      res.render('admins.ejs', { admins: results })
+    }
+  )
+});
+
+
+// 管理者登録ページ
+app.get('/admin_new', (req, res) => {
+  res.render('admin_new.ejs')
+});
+
+// 管理者登録
+app.post('/admin_new', (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  bcrypt.hash(password, 10, (error, hash) => {
+    connection.query(
+      'INSERT INTO admins(email, password) VALUES (?, ?)',
+      [email, hash],
+      (error, results) => {
+        res.render('admin_new.ejs')
+      }
+    )
+  }
+  )
+});
+
+// 管理者詳細ページ
+app.get('/admin/:id', (req, res) => {
+  const id = req.params.id;
+  connection.query(
+    'SELECT * FROM admins WHERE id =?',
+    [id],
+    (error, results) => {
+      res.render('admin.ejs', { admin: results[0] });
+    }
+  )
+});
+
+app.post('/admin/update/:id', (req, res) => {
+  const id = req.params.id;
+  const email = req.body.email;
+  const password = req.body.password;
+  bcrypt.hash(password, 10, (error, hash) => {
+    connection.query(
+      'UPDATE admins SET email =?, password = ? WHERE id = ?',
+      [email, hash, id]
+    ),
+    connection.query(
+      'SELECT * FROM admins WHERE id = ?',
+      [id],
+      (error, results) => {
+        res.render('admin.ejs', { admin: results[0] });
+      }
+    )
+    }
+    )
+  });
 
 
 app.listen(4000);

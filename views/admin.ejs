@@ -1,0 +1,8 @@
+<form action="/admin/update/<%=　admin.id %>" method="post">
+    <%= admin.id %> 
+    <p>メールアドレス</p>
+    <input type="email" name="email" placeholder="<%= admin.email %>">
+    <p>パスワード</p>
+    <input type="password" name="password">
+    <input type="submit" value="更新する">
+</form>

@@ -1,0 +1,13 @@
+<a href="/admin_new" class="new-button">+</a>
+<table border>
+    <tr>
+    <td>ID</td>
+    <td>email</td>
+    </tr>
+    <% admins.forEach((admin) => { %>
+        <tr>
+        <td><%=　admin.id %></td>
+        <td><a href= "/admin/<%=　admin.id %>"><%=　admin.email %></a></td>
+        </tr>
+    <% }) %> 
+</table>
