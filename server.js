@@ -68,6 +68,18 @@ app.get('/user_new',(req,res)=>{
 res.render('user_new.ejs');
 });
 
+app.post('/user_new',(req,res)=>{
+  const username=req.body.username;
+  const email=req.body.email;
+  const password=req.body.password;
+connection.query(
+  'insert into users(name,email,password) values(?,?,?)',
+  [username,email,password],
+  (error,results)=>{
+    res.redirect('/dashboard');
+  }
+);
+});
 
 
 app.listen(4000);
