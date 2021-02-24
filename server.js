@@ -60,8 +60,32 @@ res.render('dashboard.ejs');
 });
 
 app.get('/clients',(req,res)=>{
+  connection.query(
+    'select id,name,tel,email from owner',
+    (error,results)=>{
+      console.log(results);
+    } 
+  )
 res.render('clients.ejs');
 });
+
+app.get('/client_new',(req,res)=>{
+res.render('client_new.ejs');
+});
+
+app.post('/client_new',(req,res)=>{
+const name=req.body.owner_name;
+const email=req.body.email;
+const tel=req.body.tel;
+connection.query(
+  'insert into owner(name,email,tel)values(?,?,?)',
+  [name,email,tel],
+  (errot,results)=>{
+    res.redirect('/clients');
+  }
+)
+});
+
 
 app.get('/users',(req,res)=>{
 res.render('users.ejs');
