@@ -1,3 +1,3 @@
 hi I'm kana!!
 hi I'm mamo!!
-kazukikazukikazuki!!
+hi I'm kazu!!
