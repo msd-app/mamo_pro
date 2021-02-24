@@ -40,8 +40,6 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
-.package-lock
-.package
 
 # TypeScript v1 declaration files
 typings/
@@ -112,3 +110,6 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+
+.package-lock.json
+.package.json
