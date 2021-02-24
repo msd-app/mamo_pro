@@ -48,7 +48,7 @@ app.get('/login',(req,res)=>{
 res.render('login.ejs');
 });
 
-// ログイン認証機能（DBのusers使用)
+// ログイン認証機能
 app.post('/login',(req,res)=>{
   const email = req.body.email;
   connection.query(
@@ -73,6 +73,14 @@ app.post('/login',(req,res)=>{
     }
   )
 });
+
+app.get('/logout', (req, res) => {
+  req.session.destroy(error => {
+    res.redirect('/login');
+  });
+});
+
+
 
 
 app.get('/dashboard',(req,res)=>{
