@@ -2,6 +2,9 @@ const express = require('express');
 const mysql = require('mysql');
 const app = express();
 
+const dotenv = require('dotenv');
+const result = dotenv.config();
+
 //css、画像の読み込み用
 app.use(express.static('public'));
 
