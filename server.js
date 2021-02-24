@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('mysql');
 const app = express();
+const session = require('express-session');
 
 // 環境変数
 const dotenv = require('dotenv');
@@ -33,6 +34,15 @@ connection.connect((err) => {
   console.log('success');
 });
 
+// セッション管理
+app.use(
+  session({
+    secret: 'my_secret_key',
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
 
 app.get('/login',(req,res)=>{
 res.render('login.ejs');
@@ -40,25 +50,30 @@ res.render('login.ejs');
 
 // ログイン認証機能（DBのusers使用)
 app.post('/login',(req,res)=>{
-  const email=req.body.email;
+  const email = req.body.email;
   connection.query(
-    'select * from users where email=?',
+    'select * from admins where email=?',
     [email],
     (error,results)=>{
+      console.log(results)
       if(results.length > 0){
-        if(req.body.password===results[0].password){
-          console.log('認証に成功しました');
-          res.redirect('/dashboard');
-        }else{
-          console.log('認証に失敗しました');
-          res.redirect('/login');
-        }
+        const plain = req.body.password
+        const hash = results[0].password
+        bcrypt.compare(plain, hash, (error, isEqual) =>{
+          if(isEqual){
+            req.session.adminId = results[0].id;
+            res.redirect('/dashboard');
+          }else{
+            res.redirect('/login');
+          }
+        });
       }else{
         res.redirect('/login');
       }
     }
-  );
+  )
 });
+
 
 app.get('/dashboard',(req,res)=>{
 res.render('dashboard.ejs');
