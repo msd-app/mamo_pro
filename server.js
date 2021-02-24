@@ -13,10 +13,10 @@ app.use(express.urlencoded({extended: false}));
 
 //mysqlに接続
 const connection = mysql.createConnection({
-  host: '52.194.222.85',
-  user: 'root',
-  password: 'root',
-  database: 'mamo_db'
+  host: process.env.HOST,
+  user: process.env.DBUSER,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE
 });
 
 connection.connect((err) => {
@@ -60,8 +60,32 @@ res.render('dashboard.ejs');
 });
 
 app.get('/clients',(req,res)=>{
+  connection.query(
+    'select id,name,tel,email from owner',
+    (error,results)=>{
+      console.log(results);
+    } 
+  )
 res.render('clients.ejs');
 });
+
+app.get('/client_new',(req,res)=>{
+res.render('client_new.ejs');
+});
+
+app.post('/client_new',(req,res)=>{
+const name=req.body.owner_name;
+const email=req.body.email;
+const tel=req.body.tel;
+connection.query(
+  'insert into owner(name,email,tel)values(?,?,?)',
+  [name,email,tel],
+  (errot,results)=>{
+    res.redirect('/clients');
+  }
+)
+});
+
 
 app.get('/users',(req,res)=>{
 res.render('users.ejs');
@@ -70,6 +94,11 @@ res.render('users.ejs');
 app.get('/user_new',(req,res)=>{
 res.render('user_new.ejs');
 });
+
+console.log("host "+process.env.HOST)
+console.log("user "+process.env.DBUSER)
+console.log("password "+process.env.PASSWORD)
+console.log("database "+process.env.DATABASE)
 
 app.post('/user_new',(req,res)=>{
   const username=req.body.username;
