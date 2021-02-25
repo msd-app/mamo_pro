@@ -1,11 +1,11 @@
 <%- include('header'); %>
 <a href="/admin_new" class="new-button">+</a>
-<table border>
+<table class="table7">
     <tr>
-    <td>ID</td>
-    <td>管理者</td>
-    <td>email</td>
-    <td>ステータス</td>
+    <th>ID</th>
+    <th>管理者</th>
+    <th>email</th>
+    <th>ステータス</th>
     </tr>
     <% admins.forEach((admin) => { %>
         <tr>
@@ -43,4 +43,20 @@
   background-color: red; /*緑*/
 }
 
+.table7{
+width: 100%;
+border-collapse: collapse;
+border-right: 1px solid #8fd2ed;
+}
+.table7 th{
+padding: 10px;
+background-color: #cee7ff;
+border-left: 5px solid #8fd2ed; 
+border-top: 1px solid #fff;
+}
+.table7 td{
+padding: 10px;
+background-color: #fff;
+border: 1px solid #999;
+}
 </style>

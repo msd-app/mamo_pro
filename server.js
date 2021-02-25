@@ -25,6 +25,11 @@ const connection = mysql.createConnection({
   database: process.env.DATABASE
 });
 
+console.log("host "+process.env.HOST)
+console.log("user "+process.env.DBUSER)
+console.log("password "+process.env.PASSWORD)
+console.log("database "+process.env.DATABASE)
+
 connection.connect((err) => {
   // エラーが引数に渡されている場合、エラースタックを表示
   if (err) {
@@ -136,11 +141,6 @@ res.render('users.ejs');
 app.get('/user_new',(req,res)=>{
 res.render('user_new.ejs');
 });
-
-console.log("host "+process.env.HOST)
-console.log("user "+process.env.DBUSER)
-console.log("password "+process.env.PASSWORD)
-console.log("database "+process.env.DATABASE)
 
 app.post('/user_new',(req,res)=>{
   const username=req.body.username;
