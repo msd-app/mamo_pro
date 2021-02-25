@@ -201,6 +201,7 @@ app.get('/admin/:id', (req, res) => {
     'SELECT * FROM admins WHERE id =?',
     [id],
     (error, results) => {
+      console.log(results)
       res.render('admin.ejs', { admin: results[0] });
     }
   )
@@ -230,6 +231,38 @@ app.post('/admin/update/:id', (req, res) => {
     (error, results) => {
       res.redirect('/admin/:id');
     }
+});
+
+// クリニックルーティング
+
+// クリニック一覧
+app.get('/clinics', (req, res)=>{
+
+});
+
+// クリニック詳細
+app.get('', (req, res)=>{
+
+});
+
+// クリニック編集
+app.get('', (req, res)=>{
+
+});
+
+//  クリニック更新
+app.post('', (req, res)=>{
+
+});
+
+// クリニック新規登録ページ
+app.get('', (req, res)=>{
+
+});
+
+//  クリニック新規登録
+app.post('', (req, res)=>{
+
 });
 
 app.listen(4000);
