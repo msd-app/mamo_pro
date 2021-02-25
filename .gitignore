@@ -110,3 +110,4 @@ dist
 
 package-lock.json
 package.json
+.DS_Store
