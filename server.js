@@ -43,7 +43,7 @@ app.use(
   })
 );
 
-// ヘッダー
+// ヘッダー用
 app.use((req, res, next) => {
   if (req.session.adminId === undefined) {
     res.locals.isLoggedIn = false;
@@ -55,17 +55,27 @@ app.use((req, res, next) => {
 }); 
 
 
-app.use((req, res, next)=>{
+// セッションを確認
+// app.use((req, res, next)=>{
+//   if (req.session.adminId === undefined) {
+//     console.log('ログインしていません');
+//   } else {
+//     console.log('ログインしています');
+//   }
+//   next();
+// });
+
+// 全てのルーティングでセッション確認条件分岐
+app.get('*', (req,res, next) => {
   if (req.session.adminId === undefined) {
-    console.log('ログインしていません');
-  } else {
-    console.log('ログインしています');
+    res.render('login.ejs')
   }
-  next();
-});
+  else{
+    next()
+  }
+})
 
-
-
+// ログイン
 app.get('/login',(req,res)=>{
 res.render('login.ejs');
 });
@@ -77,21 +87,25 @@ app.post('/login',(req,res)=>{
     'select * from admins where email=?',
     [email],
     (error,results)=>{
-      if(results.length > 0){
-        const plain = req.body.password
-        const hash = results[0].password
-        bcrypt.compare(plain, hash, (error, isEqual) =>{ 
-          // console.log(isEqual)
-          if(isEqual){
-            req.session.adminId = results[0].id;
-            req.session.adminName = results[0].name;
-            res.redirect('/dashboard');
-          }else{
-            res.redirect('/login');
-          }
-        });
-      }else{
+      if(results[0].status === 1){
         res.redirect('/login');
+      }else{
+        if(results.length > 0){
+          const plain = req.body.password
+          const hash = results[0].password
+          bcrypt.compare(plain, hash, (error, isEqual) =>{ 
+            // console.log(isEqual)
+            if(isEqual){
+              req.session.adminId = results[0].id;
+              req.session.adminName = results[0].name;
+              res.redirect('/dashboard');
+            }else{
+              res.redirect('/login');
+            }
+          });
+        }else{
+          res.redirect('/login');
+        }
       }
     }
   )
