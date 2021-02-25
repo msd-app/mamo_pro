@@ -111,6 +111,7 @@ app.post('/login',(req,res)=>{
   )
 });
 
+// ログアウト
 app.get('/logout', (req, res) => {
   req.session.destroy(error => {
     res.redirect('/login');
