@@ -8,21 +8,21 @@
   <title>クライアント一覧</title>
 </head>
 <body>
+  <a href="/client_new">オーナー新規登録</a>
   <div class="header">
-    <div class="title">クライアント一覧</div>
+    <div class="title">オーナー一覧</div>
   </div>
 
   <div class="main">
     <div class="contents">
       <div class="">
         <ul>
-          <%#owner.forEach(owner => { %>
+          <% owners.forEach(owners => { %>
             <li>
-              <span class=""></span>
-              <span class=""></span>
-              <span class=""></span>
+              <span class=""><%= owners.id %></span>
+              <a href="/client_page/<%= owners.id %> "><span><%= owners.name %></span></a>
             </li>
-         <%# }); %> 
+         <% }); %> 
         </ul>
       </div>
     </div>

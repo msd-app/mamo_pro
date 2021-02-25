@@ -70,15 +70,15 @@ app.use((req, res, next) => {
 //   next();
 // });
 
-// 全てのルーティングでセッション確認条件分岐
-app.get('*', (req,res, next) => {
-  if (req.session.adminId === undefined) {
-    res.render('login.ejs')
-  }
-  else{
-    next()
-  }
-})
+// // 全てのルーティングでセッション確認条件分岐
+// app.get('*', (req,res, next) => {
+//   if (req.session.adminId === undefined) {
+//     res.render('login.ejs')
+//   }
+//   else{
+//     next()
+//   }
+// })
 
 // ログイン
 app.get('/login',(req,res)=>{
@@ -130,28 +130,77 @@ app.get('/dashboard',(req,res)=>{
 res.render('dashboard.ejs');
 });
 
+//オーナー一覧表示
 app.get('/clients',(req,res)=>{
   connection.query(
-    'select id,name,tel,email from owner',
+    'select id,name,tel,email from owners where status=1',
     (error,results)=>{
-      console.log(results);
+      res.render('clients.ejs',{owners:results});
     } 
   )
-res.render('clients.ejs');
 });
 
+// オーナー新規追加ページ表示
 app.get('/client_new',(req,res)=>{
 res.render('client_new.ejs');
 });
 
+//オーナー新規追加機能（DB owners使用） 
 app.post('/client_new',(req,res)=>{
-const name=req.body.owner_name;
+const name=req.body.owners_name;
 const email=req.body.email;
 const tel=req.body.tel;
 connection.query(
-  'insert into owner(name,email,tel)values(?,?,?)',
+  'insert into owners(name,email,tel,status)values(?,?,?,1)',
   [name,email,tel],
   (errot,results)=>{
+    res.redirect('/clients');
+  }
+)
+});
+
+// 各オーナーの情報表示
+app.get('/client_page/:id',(req,res)=>{
+  connection.query(
+    'select * from owners where id=?',
+    [req.params.id],
+    (error,results)=>{
+      res.render('client_page.ejs',{owners:results[0]});
+    }
+  )
+});
+
+// オーナーの情報削除
+app.post('/client_delete/:id',(req,res)=>{
+  connection.query(
+    'update owners set status=0 where id=?',
+    [req.params.id],
+    (error,results)=>{
+      res.redirect('/clients');
+    }
+  )
+});
+
+// オーナーの情報編集画面表示
+app.get('/client_edit/:id',(req,res)=>{
+connection.query(
+  'select * from owners where id=?',
+  [req.params.id],
+  (error,results)=>{
+    res.render('client_edit.ejs',{owners:results[0]});
+  }
+)
+});
+
+// オーナーの情報更新
+app.post('/client_edit/:id',(req,res)=>{
+  const name=req.body.oname;
+  const tel=req.body.otel;
+  const email=req.body.oemail;
+connection.query(
+  'update owners set name=?,tel=?,email=? where id=?',
+  [name,tel,email,req.params.id],
+  (error,results)=>{
     res.redirect('/clients');
   }
 )
