@@ -43,6 +43,28 @@ app.use(
   })
 );
 
+// ヘッダー
+app.use((req, res, next) => {
+  if (req.session.adminId === undefined) {
+    res.locals.isLoggedIn = false;
+  } else {
+    res.locals.adminName = req.session.adminName;
+    res.locals.isLoggedIn = true;
+  }
+  next();
+}); 
+
+
+app.use((req, res, next)=>{
+  if (req.session.adminId === undefined) {
+    console.log('ログインしていません');
+  } else {
+    console.log('ログインしています');
+  }
+  next();
+});
+
+
 
 app.get('/login',(req,res)=>{
 res.render('login.ejs');
@@ -55,13 +77,14 @@ app.post('/login',(req,res)=>{
     'select * from admins where email=?',
     [email],
     (error,results)=>{
-      console.log(results)
       if(results.length > 0){
         const plain = req.body.password
         const hash = results[0].password
-        bcrypt.compare(plain, hash, (error, isEqual) =>{
+        bcrypt.compare(plain, hash, (error, isEqual) =>{ 
+          // console.log(isEqual)
           if(isEqual){
             req.session.adminId = results[0].id;
+            req.session.adminName = results[0].name;
             res.redirect('/dashboard');
           }else{
             res.redirect('/login');
@@ -193,6 +216,5 @@ app.post('/admin/update/:id', (req, res) => {
       res.redirect('/admin/:id');
     }
 });
-
 
 app.listen(4000);

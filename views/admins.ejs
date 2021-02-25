@@ -1,3 +1,4 @@
+<%- include('header'); %>
 <a href="/admin_new" class="new-button">+</a>
 <table border>
     <tr>
@@ -15,7 +16,7 @@
             <% if(admin.status === 0) { %>
                 <span class="badge valid-badge">有効</span>
             <% } else { %>
-               <span class="badge invalid-badge">無効</span>
+                <span class="badge invalid-badge">無効</span>
             <% } %>
         </td>
         </tr>
