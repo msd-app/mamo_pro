@@ -1,0 +1,21 @@
+<%- include('header'); %>
+<form action="/clinic_update/<%=　shop.id %>" method="post">
+    <p>ユーザーID：<%= shop.id %></p>
+    <p>クリニック名</p>
+    <input type="text" name="name" value="<%= shop.name %>">
+    <p>電話番号</p>
+    <input type="tel" name="tel" value="<%= shop.tel %>">
+    <p>オーナー</p>
+    <select name="owner_id">
+        <option value="<%= shop.owner_id %>"><%= shop.owner_id %></option>
+    </select>
+    <p>有効ステータス</p>
+    <% if(shop.status === 0) { %>
+        <input type="radio" name="status" value=0 checked="checked">有効
+        <input type="radio" name="status" value=1>無効
+    <% } else { %>
+        <input type="radio" name="status" value=0>有効
+        <input type="radio" name="status" value=1 checked="checked">無効
+    <% } %>
+    <input type="submit" value="更新する">
+</form>
