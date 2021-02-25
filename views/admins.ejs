@@ -1,0 +1,62 @@
+<%- include('header'); %>
+<a href="/admin_new" class="new-button">+</a>
+<table class="table7">
+    <tr>
+    <th>ID</th>
+    <th>管理者</th>
+    <th>email</th>
+    <th>ステータス</th>
+    </tr>
+    <% admins.forEach((admin) => { %>
+        <tr>
+        <td><%=　admin.id %></td>
+        <td><%=　admin.name %></td>
+        <td><a href= "/admin/<%=　admin.id %>"><%=　admin.email %></a></td>
+        <td>
+            <% if(admin.status === 0) { %>
+                <span class="badge valid-badge">有効</span>
+            <% } else { %>
+                <span class="badge invalid-badge">無効</span>
+            <% } %>
+        </td>
+        </tr>
+    <% }) %> 
+</table>
+
+<style>
+.badge {
+  padding: 3px 6px;
+  margin-right: 8px;
+  margin-left: 1px;
+  font-size: 75%;
+  color: white;
+  border-radius: 6px;
+  box-shadow: 0 0 3px #ddd;
+  white-space: nowrap;
+}
+
+.valid-badge {
+  background-color: #58ACFA; /*青*/
+}
+
+.invalid-badge {
+  background-color: red; /*緑*/
+}
+
+.table7{
+width: 100%;
+border-collapse: collapse;
+border-right: 1px solid #8fd2ed;
+}
+.table7 th{
+padding: 10px;
+background-color: #cee7ff;
+border-left: 5px solid #8fd2ed; 
+border-top: 1px solid #fff;
+}
+.table7 td{
+padding: 10px;
+background-color: #fff;
+border: 1px solid #999;
+}
+</style>

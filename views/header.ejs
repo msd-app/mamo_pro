@@ -1,0 +1,20 @@
+<header>
+    <div class="header-nav">
+      <p><%= locals.adminName %>でログインしています。</p>
+      <ul>
+        <% if (locals.isLoggedIn) { %>
+          <li><a href="/logout">ログアウト</a></li>
+        <% } else { %>
+          <li><a href="/login">ログイン</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </header>
+
+  <style>
+  header{
+  height: 56px;
+  background-color:#00ced1;
+  border-bottom: 1px solid #f0f4f9;
+  }
+  </style>

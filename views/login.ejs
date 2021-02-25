@@ -1,32 +1,105 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="statics/ss/style.css">
-  <title>ログイン</title>
-</head>
-<body>
-  <a href="/dashboard">ダッシュボードへ</a>
-  <a href="/clients">クライアント一覧へ</a>
-  <a href="/users">ユーザー一覧へ</a>
-  <div class="header">
-    <div class="title">テスト</div>
-    <div class="new">
-      <a href="/user_new">新規登録</a>
-    </div>
-  </div>
-  <div class="main">
-    <div class="contents">
-      <form action="/login" method="post">
-        <div class="forms">
-          <input class="box" type="email" name="email" placeholder="E-mail"><br>
-          <input class="box" type="password" name="password" id="" placeholder="PassWord"><br>
-          <input class="btn" type="submit" value="ログイン">
-        </div>
-      </form>
-    </div>
-  </div>
-</body>
-</html>
+<div id="form">
+  <form action="/login" method="post">
+    <p class="form-title">Login</p>
+    <p>Email</p>
+    <p class="mail">
+      <input type="email" name="email" placeholder="E-mail">
+    </p>
+    <p>Password</p>
+    <p class="pass">
+      <input type="password" name="password" id="" placeholder="PassWord">
+    </p>
+    <p class="submit">
+      <input type="submit" value="ログイン">
+    </p>
+  </form>
+</div>
 
+
+<style>
+/* layout */
+body,p,form,input{margin: 0}
+#form{
+  width: 400px;
+  margin: 200px auto;
+  padding: 20px;
+  border: 1px solid #555;
+  }
+
+form p{
+    font-size: 14px;
+    }
+
+.form-title{
+  text-align: center;
+  }
+
+.mail,.pass{
+  margin-bottom: 20px;
+  }
+
+input[type="email"],
+input[type="password"] {
+  width: 300px;
+  padding: 4px;
+  font-size: 14px;
+  }
+    
+.submit{
+  text-align: right;
+  }
+
+/* font */
+#form p{
+  color: #077685;
+  font-weight: bold;
+  }
+
+#form .form-title{
+  font-family: Arial;
+  font-size: 30px;
+  color: #4eb4c2;
+  }
+
+/* skin */
+#form{
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-box-shadow: 0px 1px 10px #488a9e;
+  -moz-box-shadow: 0px 1px 10px #488a9e;
+  box-shadow: 0px 1px 10px #488a9e;
+  border: solid #4eb4c2 1px;
+  background: #fafafa;
+  }
+
+#form .form-title{
+  padding-bottom: 6px;
+  border-bottom: 2px solid #4eb4c2;
+  margin-bottom: 20px;
+  }
+
+.submit input{
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 16px;
+  padding-top: 10px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  text-decoration: none;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 8px 6px #e3e3e3;
+  -moz-box-shadow: 0px 8px 6px #e3e3e3;
+  box-shadow: 0px 8px 6px #e3e3e3;
+  border: solid #f5fdff 4px;
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#61c7e0), to(#418da8));
+  background: -moz-linear-gradient(top, #61c7e0, #418da8);
+  }
+.submit input:hover{
+  background: #37a4bf;
+ }
+
+</style>
