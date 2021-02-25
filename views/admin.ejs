@@ -1,8 +1,18 @@
 <form action="/admin/update/<%=　admin.id %>" method="post">
-    <%= admin.id %> 
+    <p>ユーザーID：<%= admin.id %></p>
+    <p>ユーザー名</p>
+    <input type="text" name="name" value="<%= admin.name %>">
     <p>メールアドレス</p>
-    <input type="email" name="email" placeholder="<%= admin.email %>">
+    <input type="email" name="email" value="<%= admin.email %>">
     <p>パスワード</p>
     <input type="password" name="password">
+    <p>有効ステータス</p>
+    <% if(admin.status === 0) { %>
+        <input type="radio" name="status" value=0 checked="checked">有効
+        <input type="radio" name="status" value=1>無効
+    <% } else { %>
+        <input type="radio" name="status" value=0>有効
+        <input type="radio" name="status" value=1 checked="checked">無効
+    <% } %>
     <input type="submit" value="更新する">
 </form>

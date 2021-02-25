@@ -139,13 +139,16 @@ app.get('/admin_new', (req, res) => {
 
 // 管理者登録
 app.post('/admin_new', (req, res) => {
+  console.log(req.body)
+  const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
   bcrypt.hash(password, 10, (error, hash) => {
     connection.query(
-      'INSERT INTO admins(email, password) VALUES (?, ?)',
-      [email, hash],
+      'INSERT INTO admins(name, email, password) VALUES (?, ?, ?)',
+      [name, email, hash],
       (error, results) => {
+        console.log(error)
         res.render('admin_new.ejs')
       }
     )
@@ -168,21 +171,27 @@ app.get('/admin/:id', (req, res) => {
 // 管理者更新
 app.post('/admin/update/:id', (req, res) => {
   const id = req.params.id;
+  const name = req.body.name;
   const email = req.body.email;
+  const status = req.body.status;
   const password = req.body.password;
-  bcrypt.hash(password, 10, (error, hash) => {
+
+  if(password === null){
     connection.query(
-      'UPDATE admins SET email =?, password = ? WHERE id = ?',
-      [email, hash, id]
-    ),
-    connection.query(
-      'SELECT * FROM admins WHERE id = ?',
-      [id],
-      (error, results) => {
-        res.render('admin.ejs', { admin: results[0] });
-      }
+      'UPDATE admins SET name = ?, email = ?, status = ? WHERE id = ?',
+      [name, email, status, id]
     )
-  })
+  }else{
+    bcrypt.hash(password, 10, (error, hash) => {
+      connection.query(
+        'UPDATE admins SET name = ?, email = ?, password = ?, status = ? WHERE id = ?',
+        [name, email, hash, status, id]
+      )
+    })
+  }
+    (error, results) => {
+      res.redirect('/admin/:id');
+    }
 });
 
 

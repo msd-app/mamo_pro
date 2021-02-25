@@ -2,12 +2,44 @@
 <table border>
     <tr>
     <td>ID</td>
+    <td>管理者</td>
     <td>email</td>
+    <td>ステータス</td>
     </tr>
     <% admins.forEach((admin) => { %>
         <tr>
         <td><%=　admin.id %></td>
+        <td><%=　admin.name %></td>
         <td><a href= "/admin/<%=　admin.id %>"><%=　admin.email %></a></td>
+        <td>
+            <% if(admin.status === 0) { %>
+                <span class="badge valid-badge">有効</span>
+            <% } else { %>
+               <span class="badge invalid-badge">無効</span>
+            <% } %>
+        </td>
         </tr>
     <% }) %> 
 </table>
+
+<style>
+.badge {
+  padding: 3px 6px;
+  margin-right: 8px;
+  margin-left: 1px;
+  font-size: 75%;
+  color: white;
+  border-radius: 6px;
+  box-shadow: 0 0 3px #ddd;
+  white-space: nowrap;
+}
+
+.valid-badge {
+  background-color: #58ACFA; /*青*/
+}
+
+.invalid-badge {
+  background-color: red; /*緑*/
+}
+
+</style>
