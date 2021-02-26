@@ -4,7 +4,8 @@
     <p>クリニックID：<%= shop.id %></p>
     <p>クリニック名:<%= shop.name %></p>
     <p>電話番号:<%= shop.tel %></p>
-    <p>オーナー:<%= shop.owner_id %></p>
+    <p>オーナーID:<%= shop.owner_id %></p>
+    <p>オーナー名:<%= owner.name %></p>
     <p>有効ステータス</p>
     <% if(shop.status === 0) { %>
         <span class="badge valid-badge">有効</span>

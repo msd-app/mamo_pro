@@ -1,6 +1,7 @@
 <%- include('header'); %>
 <div id="form">
     <p class="form-title">クリニック登録</p>
+    <%- include('error'); %>
     <form action="/clinic_new" method="post">
         <p>クリニック名</p>
         <input type="text" name="name">

@@ -427,36 +427,20 @@ app.get('/clinics', (req, res)=>{
 app.get('/clinic/:id', (req, res)=>{
   const id = req.params.id;
   connection.query(
-    'SELECT * FROM shops WHERE id = ?',
-    [id],
+    'SELECT owners.name FROM owners JOIN shops ON owners.id = shops.owner_id WHERE shops.id = ? ; SELECT * FROM shops WHERE id = ? ',
+    [id, id],
     (error, results) =>{
-      console.log(results)
-      res.render('clinic.ejs', {shop: results[0]})
+      console.log(results[0])
+      res.render('clinic.ejs', {owner: results[0][0], shop: results[1][0]})
     }
   )
 });
 
 // クリニック編集
-// app.get('/clinic_edit/:id', (req, res)=>{
-//   const id = req.params.id;
-//   connection.query(
-//     'SELECT * FROM shops WHERE id = ?',
-//     [id],
-//     (error, results, owners) =>{
-//       res.render('clinic_edit.ejs', {shop: results[0], owners: owners})
-//     }
-//   )
-// });
-
-// クリニック編集
 app.get('/clinic_edit/:id', (req, res)=>{
   const id = req.params.id;
-  const data =[];
-  //  "'SELECT * FROM owners'"
-  // `'SELECT * FROM shops WHERE id = ?', ${[id]}`
   console.log("表示したいid " + id)
   connection.query(
-    // 'SELECT * FROM owners; SELECT * FROM shops',
     'SELECT * FROM owners; SELECT * FROM shops WHERE id = ?',
     [id],
     (error, results) => {
@@ -466,14 +450,37 @@ app.get('/clinic_edit/:id', (req, res)=>{
       console.log(results[0])
       console.log("-----------------ここから店")
       console.log(results[1][0])
-      res.render('clinic_edit.ejs',  {shop: results[1][0], owners: results[0] } )
+      res.render('clinic_edit.ejs',  {shop: results[1][0], owners: results[0], errors: [] } )
     }
     }
   )
 });
 
 //  クリニック更新
-app.post('/clinic_update/:id', (req, res)=>{
+app.post('/clinic_update/:id',(req, res, next) => {
+  const id = req.params.id;
+  const name = req.body.name;
+  const tel = req.body.tel;
+  const errors = [];
+  if (name === '') {
+    errors.push('クリニック名が空です');
+  }
+  if (tel === '') {
+    errors.push('電話番号が空です');
+  }
+  if (errors.length > 0) {
+    connection.query(
+      'SELECT * FROM owners; SELECT * FROM shops WHERE id = ?',
+      [id],
+      (error, results) => {
+      res.render('clinic_edit.ejs', { shop: results[1][0], owners: results[0], errors: errors });
+      }
+    )
+  } else {
+    next();
+  }
+},
+(req, res)=>{
   const id = req.params.id;
   const name = req.body.name;
   const tel = req.body.tel;
@@ -491,13 +498,36 @@ app.get('/clinic_new', (req, res)=>{
   connection.query(
     'SELECT * FROM owners',
     (error, results) => {
-      res.render('clinic_new.ejs', { owners: results })
+      res.render('clinic_new.ejs', { owners: results, errors: [] })
     }
   )
 });
 
 //  クリニック新規登録
-app.post('/clinic_new', (req, res)=>{
+app.post('/clinic_new', (req, res, next) => {
+  const id = req.params.id;
+  const name = req.body.name;
+  const tel = req.body.tel;
+  const errors = [];
+  if (name === '') {
+    errors.push('クリニック名が空です');
+  }
+  if (tel === '') {
+    errors.push('電話番号が空です');
+  }
+  if (errors.length > 0) {
+    connection.query(
+      'SELECT * FROM owners',
+      [id],
+      (error, results) => {
+      res.render('clinic_new.ejs', { owners: results, errors: errors });
+      }
+    )
+  } else {
+    next();
+  }
+},
+(req, res)=>{
   const name = req.body.name;
   const tel = req.body.tel;
   const owner_id = req.body.owner_id;
