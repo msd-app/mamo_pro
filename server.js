@@ -283,6 +283,7 @@ app.get('/clinic/:id', (req, res)=>{
     'SELECT * FROM shops WHERE id = ?',
     [id],
     (error, results) =>{
+      console.log(results)
       res.render('clinic.ejs', {shop: results[0]})
     }
   )
@@ -294,8 +295,8 @@ app.get('/clinic_edit/:id', (req, res)=>{
   connection.query(
     'SELECT * FROM shops WHERE id = ?',
     [id],
-    (error, results) =>{
-      res.render('clinic_edit.ejs', {shop: results[0]})
+    (error, results, owners) =>{
+      res.render('clinic_edit.ejs', {shop: results[0], owners: owners})
     }
   )
 });
@@ -316,12 +317,26 @@ app.post('/clinic_update/:id', (req, res)=>{
 
 // クリニック新規登録ページ
 app.get('/clinic_new', (req, res)=>{
-  res.render('clinic_new.ejs')
+  connection.query(
+    'SELECT * FROM owners',
+    (error, results) => {
+      res.render('clinic_new.ejs', { owners: results })
+    }
+  )
 });
 
 //  クリニック新規登録
-app.post('/clinic/create', (req, res)=>{
-
+app.post('/clinic_new', (req, res)=>{
+  const name = req.body.name;
+  const tel = req.body.tel;
+  const owner_id = req.body.owner_id;
+  connection.query(
+    'INSERT INTO shops(name, tel, owner_id) VALUES(?, ? ,?)',
+    [name, tel, owner_id],
+    (error, results) => {
+      res.redirect(`/clinic/${results.insertId}`)
+    }
+  )
 });
 
 app.listen(4000);

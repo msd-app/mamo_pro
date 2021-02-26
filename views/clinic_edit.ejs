@@ -1,21 +1,113 @@
 <%- include('header'); %>
-<form action="/clinic_update/<%=　shop.id %>" method="post">
-    <p>ユーザーID：<%= shop.id %></p>
-    <p>クリニック名</p>
-    <input type="text" name="name" value="<%= shop.name %>">
-    <p>電話番号</p>
-    <input type="tel" name="tel" value="<%= shop.tel %>">
-    <p>オーナー</p>
-    <select name="owner_id">
-        <option value="<%= shop.owner_id. %>"><%= shop.owner_id %></option>
-    </select>
-    <p>有効ステータス</p>
-    <% if(shop.status === 0) { %>
-        <input type="radio" name="status" value=0 checked="checked">有効
-        <input type="radio" name="status" value=1>無効
-    <% } else { %>
-        <input type="radio" name="status" value=0>有効
-        <input type="radio" name="status" value=1 checked="checked">無効
-    <% } %>
-    <input type="submit" value="更新する">
-</form>
+<div id="form">
+    <p class="form-title">クリニック編集</p>
+    <form action="/clinic_update/<%=　shop.id %>" method="post">
+        <p>クリニックID：<%= shop.id %></p>
+        <p>クリニック名</p>
+        <input type="text" name="name" value="<%= shop.name %>">
+        <p>電話番号</p>
+        <input type="tel" name="tel" value="<%= shop.tel %>">
+        <p>オーナー</p>
+        <select name="owner_id">
+            <option value="<%= shop.owner_id %>"><%= shop.owner_id %></option>
+        </select>
+        <p>有効ステータス</p>
+        <% if(shop.status === 0) { %>
+            <input type="radio" name="status" value=0 checked="checked">有効
+            <input type="radio" name="status" value=1>無効
+        <% } else { %>
+            <input type="radio" name="status" value=0>有効
+            <input type="radio" name="status" value=1 checked="checked">無効
+        <% } %>
+        <p class="submit">
+        　　<input type="submit" value="更新する">
+    　　</p>
+    </form>
+</div>
+
+<style>
+    /* layout */
+    #form{
+      width: 500px;
+      margin: 100px auto;
+      padding: 20px;
+      border: 1px solid #555;
+      }
+    
+    form p{
+        font-size: 20px;
+        }
+    
+    .form-title{
+      text-align: center;
+      }
+    
+    .mail,.pass{
+      margin-bottom: 20px;
+      }
+    
+    input[type="email"],
+    input[type="password"] {
+      width: 300px;
+      padding: 4px;
+      font-size: 14px;
+      }
+        
+    .submit{
+      text-align: right;
+      }
+    
+    /* font */
+    #form p{
+      color: #077685;
+      font-weight: bold;
+      }
+    
+    #form .form-title{
+      font-family: Arial;
+      font-size: 30px;
+      color: #4eb4c2;
+      }
+    
+    /* skin */
+    #form{
+      -webkit-border-radius: 6px;
+      -moz-border-radius: 6px;
+      border-radius: 6px;
+      -webkit-box-shadow: 0px 1px 10px #488a9e;
+      -moz-box-shadow: 0px 1px 10px #488a9e;
+      box-shadow: 0px 1px 10px #488a9e;
+      border: solid #4eb4c2 1px;
+      background: #fafafa;
+      }
+    
+    #form .form-title{
+      padding-bottom: 6px;
+      border-bottom: 2px solid #4eb4c2;
+      margin-bottom: 20px;
+      }
+    
+    .submit input{
+      font-family: Arial;
+      color: #ffffff;
+      font-size: 16px;
+      padding-top: 10px;
+      padding-right: 20px;
+      padding-bottom: 10px;
+      padding-left: 20px;
+      text-decoration: none;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      border-radius: 10px;
+      -webkit-box-shadow: 0px 8px 6px #e3e3e3;
+      -moz-box-shadow: 0px 8px 6px #e3e3e3;
+      box-shadow: 0px 8px 6px #e3e3e3;
+      border: solid #f5fdff 4px;
+      background: -webkit-gradient(linear, 0 0, 0 100%, from(#61c7e0), to(#418da8));
+      background: -moz-linear-gradient(top, #61c7e0, #418da8);
+      }
+    .submit input:hover{
+      background: #37a4bf;
+     }
+    
+    </style>
