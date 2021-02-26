@@ -1,39 +1,35 @@
 <%- include('header'); %>
 <div id="form">
-    <p class="form-title">管理者情報</p>
-    <p>管理者ID：<%= admin.id %></p>
-    <p>管理者名:<%= admin.name %></p>
-    <p>電話番号:<%= admin.email %></p>
-    <p>有効ステータス</p>
-    <% if(admin.status === 0) { %>
-        <span class="badge valid-badge">有効</span>
-    <% } else if(admin.status === 1)  { %>
-        <span class="badge invalid-badge">無効</span>
-    <% } %>
-    <a href="/admin_edit/<%=　admin.id %>">編集画面へ</a>
+    <p class="form-title">クリニック編集</p>
+    <form action="/clinic_update/<%=　shop.id %>" method="post">
+        <p>クリニックID：<%= shop.id %></p>
+        <p>クリニック名</p>
+        <input type="text" name="name" value="<%= shop.name %>">
+        <p>電話番号</p>
+        <input type="tel" name="tel" value="<%= shop.tel %>">
+        <p>オーナー選択</p>
+        <select name="owner_id" id="">
+          <% owners.forEach((owner)=> { %>
+            <option value= <%= owner.id %> ><%= owner.name %></option>   
+          <% }) %> 
+        </select>
+        <p>有効ステータス</p>
+        <% if(shop.status === 0) { %>
+            <input type="radio" name="status" value=0 checked="checked">有効
+            <input type="radio" name="status" value=1>無効
+        <% } else { %>
+            <input type="radio" name="status" value=0>有効
+            <input type="radio" name="status" value=1 checked="checked">無効
+        <% } %>
+        <p class="submit">
+        　　<input type="submit" value="更新する">
+    　　</p>
+    </form>
 </div>
-<style>
-    .badge {
-      padding: 3px 6px;
-      margin-right: 8px;
-      margin-left: 1px;
-      font-size: 75%;
-      color: white;
-      border-radius: 6px;
-      box-shadow: 0 0 3px #ddd;
-      white-space: nowrap;
-    }
-    
-    .valid-badge {
-      background-color: #58ACFA; /*青*/
-    }
-    
-    .invalid-badge {
-      background-color: red; /*緑*/
-    }
 
-        /* layout */
-        #form{
+<style>
+    /* layout */
+    #form{
       width: 500px;
       margin: 100px auto;
       padding: 20px;
@@ -115,4 +111,5 @@
     .submit input:hover{
       background: #37a4bf;
      }
-</style>
+    
+    </style>
