@@ -7,9 +7,11 @@
   <title><%= owners.name %>の情報表示</title>
 </head>
 <body>
-  <div class="header">
+<%- include('header'); %>
+
+  <!-- <div class="header">
     <div class="title">オーナー情報</div>
-  </div>
+  </div> -->
 
   <div class="main">
     <div class="contents">
@@ -36,3 +38,17 @@
   </div>
 </body>
 </html>
+
+<style>
+  .main{
+    width:500px;
+    margin: 100px auto;
+    padding: 20px;
+    border: 1px solid #555;
+  }
+
+  
+
+
+
+</style>

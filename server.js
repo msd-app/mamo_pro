@@ -73,6 +73,19 @@ app.use((req, res, next) => {
 //   next();
 // });
 
+
+// 全てのルーティングでセッション確認条件分岐
+
+// // 全てのルーティングでセッション確認条件分岐
+// app.get('*', (req,res, next) => {
+//   if (req.session.adminId === undefined) {
+//     res.render('login.ejs')
+//   }
+//   else{
+//     next()
+//   }
+// })
+
 // ログイン
 app.get('/login',(req,res)=>{
 res.render('login.ejs',{ errors: [] } );

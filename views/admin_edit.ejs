@@ -1,6 +1,7 @@
 <%- include('header'); %>
 <div id="form">
     <p class="form-title">管理者編集</p>
+    <form action="/admin/update/<%=admin.id %>" method="post">
     <%- include('error'); %>
     <form action="/admin/update/<%=　admin.id %>" method="post">
         <p>管理者ID：<%= admin.id %></p>
