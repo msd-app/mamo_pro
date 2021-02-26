@@ -3,23 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <link rel="stylesheet" href="statics/ss/style.css">
+  <title><%= owners.name %>の情報表示</title>
 </head>
 <body>
   <div class="header">
     <div class="title">オーナー情報</div>
   </div>
+
   <div class="main">
     <div class="contents">
       <div class="">
-        <ul>
-          <li>
-            <span><%= owners.id %></span>
-            <span><%= owners.name %></span>
-            <span><%= owners.tel %></span>
-            <span><%= owners.email %></span>
-          </li>
-        </ul>
+        <tr>
+          
+            <td><%= owners.id %></td>
+            <td><%= owners.name %></td>
+            <td><%= owners.tel %></td>
+            <td><%= owners.email %></td>
+          
+        </tr>
       </div>
       <div class="">
 

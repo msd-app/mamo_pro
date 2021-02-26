@@ -9,9 +9,9 @@
     </tr>
     <% admins.forEach((admin) => { %>
         <tr>
-        <td><%=　admin.id %></td>
-        <td><%=　admin.name %></td>
-        <td><a href= "/admin/<%=　admin.id %>"><%=　admin.email %></a></td>
+        <td><%=admin.id %></td>
+        <td><%=admin.name %></td>
+        <td><a href= "/admin/<%=admin.id %>"><%=admin.email %></a></td>
         <td>
             <% if(admin.status === 0) { %>
                 <span class="badge valid-badge">有効</span>

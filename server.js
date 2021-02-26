@@ -160,7 +160,7 @@ res.render('dashboard.ejs');
 //オーナー一覧表示
 app.get('/clients',(req,res)=>{
   connection.query(
-    'select id,name,tel,email from owners where status=1',
+    'select id,name,tel,email from owners where status=0',
     (error,results)=>{
       res.render('clients.ejs',{owners:results});
     } 
@@ -178,7 +178,7 @@ const name=req.body.owners_name;
 const email=req.body.email;
 const tel=req.body.tel;
 connection.query(
-  'insert into owners(name,email,tel,status)values(?,?,?,1)',
+  'insert into owners(name,email,tel,status)values(?,?,?,0)',
   [name,email,tel],
   (errot,results)=>{
     res.redirect('/clients');
@@ -200,7 +200,7 @@ app.get('/client_page/:id',(req,res)=>{
 // オーナーの情報削除
 app.post('/client_delete/:id',(req,res)=>{
   connection.query(
-    'update owners set status=0 where id=?',
+    'update owners set status=1 where id=?',
     [req.params.id],
     (error,results)=>{
       res.redirect('/clients');
