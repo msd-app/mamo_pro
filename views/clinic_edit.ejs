@@ -1,6 +1,7 @@
 <%- include('header'); %>
 <div id="form">
     <p class="form-title">クリニック編集</p>
+    <%- include('error'); %>
     <form action="/clinic_update/<%=　shop.id %>" method="post">
         <p>クリニックID：<%= shop.id %></p>
         <p>クリニック名</p>
@@ -10,7 +11,12 @@
         <p>オーナー選択</p>
         <select name="owner_id" id="">
           <% owners.forEach((owner)=> { %>
-            <option value= <%= owner.id %> ><%= owner.name %></option>   
+            <!-- 初期値を選択しているオーナにする -->
+            <% if(shop.owner_id === owner.id ) { %>
+              <option value= <%= owner.id %> selected><%= owner.name %></option> 
+            <% } else { %>
+              <option value= <%= owner.id %> ><%= owner.name %></option> 
+            <% } %>
           <% }) %> 
         </select>
         <p>有効ステータス</p>

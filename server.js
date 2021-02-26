@@ -88,37 +88,49 @@ app.use((req, res, next) => {
 
 // ログイン
 app.get('/login',(req,res)=>{
-res.render('login.ejs');
+res.render('login.ejs',{ errors: [] } );
 });
 
 // ログイン認証機能
-app.post('/login',(req,res)=>{
+app.post('/login',(req, res, next) => {
+  console.log(req.body)
+  const email = req.body.email;
+  const password = req.body.password;
+  const errors = [];
+  if (email === '') {
+    errors.push('メールアドレスが空です');
+  }
+  if (password === '') {
+    errors.push('パスワードが空です');
+  }
+  if (errors.length > 0) {
+    res.render('login.ejs', { errors: errors });
+  } else {
+    next();
+  }
+},
+(req,res)=>{
   const email = req.body.email;
   connection.query(
     'select * from admins where email=?',
     [email],
     (error,results)=>{
-      console.log("aaaa")
       if(results[0].status === 1){
         res.redirect('/login');
-        console.log("bbb")
       }else{
         if(results.length > 0){
           const plain = req.body.password
           const hash = results[0].password
           bcrypt.compare(plain, hash, (error, isEqual) =>{ 
             if(isEqual){
-              console.log("ddd")
               req.session.adminId = results[0].id;
               req.session.adminName = results[0].name;
               res.redirect('/dashboard');
             }else{
-              console.log("fff")
               res.redirect('/login');
             }
           });
         }else{
-          console.log("ggg")
           res.redirect('/login');
         }
       }
@@ -133,15 +145,25 @@ app.get('/logout', (req, res) => {
   });
 });
 
+// 全てのルーティングでセッション確認条件分岐
+app.get('*', (req,res, next) => {
+  if (req.session.adminId === undefined) {
+    res.redirect('/login');
+  }
+  else{
+    next()
+  }
+})
+
 // postリクエスト制御
-// app.post('*', (req,res, next) => {
-//   if (req.session.adminId === undefined) {
-//     res.render('login.ejs')
-//   }
-//   else{
-//     next()
-//   }
-// })
+app.post('*', (req,res, next) => {
+  if (req.session.adminId === undefined) {
+    res.redirect('/login');
+  }
+  else{
+    next()
+  }
+})
 
 
 app.get('/dashboard',(req,res)=>{
@@ -262,11 +284,50 @@ app.get('/admins', (req,res) => {
 
 // 管理者登録ページ
 app.get('/admin_new', (req, res) => {
-  res.render('admin_new.ejs')
+  res.render('admin_new.ejs', { errors: [] })
 });
 
 // 管理者登録
-app.post('/admin_new', (req, res) => {
+app.post('/admin_new',(req, res, next) => {
+  console.log(req.body)
+  const name = req.body.name;
+  const email = req.body.email;
+  const password = req.body.password;
+  const errors = [];
+  if (name === '') {
+    errors.push('管理者名が空です');
+  }
+  if (email === '') {
+    errors.push('メールアドレスが空です');
+  }
+  if (password === '') {
+    errors.push('パスワードが空です');
+  }
+  if (errors.length > 0) {
+    res.render('admin_new.ejs', { errors: errors });
+  } else {
+    next();
+  }
+},
+(req, res, next) => {
+  console.log('メールアドレスの重複チェック');
+  const email = req.body.email;
+  const errors = [];
+  connection.query(
+    'SELECT * FROM admins WHERE email = ?',
+    [email],
+    (error, results) =>{
+      if(results.length > 0){
+        errors.push('管理者登録に失敗しました')
+        res.render('admin_new.ejs', { errors: errors });
+      }else{
+        next();
+      }
+    }
+    )
+},
+// 登録実行
+(req, res) => {
   console.log(req.body)
   const name = req.body.name;
   const email = req.body.email;
@@ -296,7 +357,7 @@ app.get('/admin/:id', (req, res) => {
   )
 });
 
-
+// 管理者編集
 app.get('/admin_edit/:id', (req, res) => {
   const id = req.params.id;
   connection.query(
@@ -304,13 +365,36 @@ app.get('/admin_edit/:id', (req, res) => {
     [id],
     (error, results) => {
       console.log(results)
-      res.render('admin_edit.ejs', { admin: results[0] });
+      res.render('admin_edit.ejs', { admin: results[0], errors:[] });
     }
   )
 });
 
 // 管理者更新
-app.post('/admin/update/:id', (req, res) => {
+app.post('/admin/update/:id',(req, res, next) => {
+  const id = req.params.id;
+  const name = req.body.name;
+  const email = req.body.email;
+  const errors = [];
+  if (name === '') {
+    errors.push('管理者名が空です');
+  }
+  if (email === '') {
+    errors.push('メールアドレスが空です');
+  }
+  if (errors.length > 0) {
+    connection.query(
+      'SELECT * FROM admins WHERE id =?',
+      [id],
+      (error, results) => {
+      res.render('admin_edit.ejs', { admin: results[0], errors: errors });
+      }
+    )
+  } else {
+    next();
+  }
+},
+(req, res) => {
   const id = req.params.id;
   const name = req.body.name;
   const email = req.body.email;
@@ -344,8 +428,10 @@ app.post('/admin/update/:id', (req, res) => {
 // クリニック一覧
 app.get('/clinics', (req, res)=>{
   connection.query(
-    'SELECT * FROM shops',
+    // 'SELECT shops.id, shops.name, shops.tel, shops.owner_id, owners.name FROM owners LEFT JOIN shops ON owners.id = shops.owner_id',
+    `SELECT * FROM shops`,
     (error, results) => {
+      console.log(results)
       res.render('clinics.ejs', { shops: results })
     }
   )
@@ -355,36 +441,20 @@ app.get('/clinics', (req, res)=>{
 app.get('/clinic/:id', (req, res)=>{
   const id = req.params.id;
   connection.query(
-    'SELECT * FROM shops WHERE id = ?',
-    [id],
+    'SELECT owners.name FROM owners JOIN shops ON owners.id = shops.owner_id WHERE shops.id = ? ; SELECT * FROM shops WHERE id = ? ',
+    [id, id],
     (error, results) =>{
-      console.log(results)
-      res.render('clinic.ejs', {shop: results[0]})
+      console.log(results[0])
+      res.render('clinic.ejs', {owner: results[0][0], shop: results[1][0]})
     }
   )
 });
 
 // クリニック編集
-// app.get('/clinic_edit/:id', (req, res)=>{
-//   const id = req.params.id;
-//   connection.query(
-//     'SELECT * FROM shops WHERE id = ?',
-//     [id],
-//     (error, results, owners) =>{
-//       res.render('clinic_edit.ejs', {shop: results[0], owners: owners})
-//     }
-//   )
-// });
-
-// クリニック編集
 app.get('/clinic_edit/:id', (req, res)=>{
   const id = req.params.id;
-  const data =[];
-  //  "'SELECT * FROM owners'"
-  // `'SELECT * FROM shops WHERE id = ?', ${[id]}`
   console.log("表示したいid " + id)
   connection.query(
-    // 'SELECT * FROM owners; SELECT * FROM shops',
     'SELECT * FROM owners; SELECT * FROM shops WHERE id = ?',
     [id],
     (error, results) => {
@@ -394,14 +464,37 @@ app.get('/clinic_edit/:id', (req, res)=>{
       console.log(results[0])
       console.log("-----------------ここから店")
       console.log(results[1][0])
-      res.render('clinic_edit.ejs',  {shop: results[1][0], owners: results[0] } )
+      res.render('clinic_edit.ejs',  {shop: results[1][0], owners: results[0], errors: [] } )
     }
     }
   )
 });
 
 //  クリニック更新
-app.post('/clinic_update/:id', (req, res)=>{
+app.post('/clinic_update/:id',(req, res, next) => {
+  const id = req.params.id;
+  const name = req.body.name;
+  const tel = req.body.tel;
+  const errors = [];
+  if (name === '') {
+    errors.push('クリニック名が空です');
+  }
+  if (tel === '') {
+    errors.push('電話番号が空です');
+  }
+  if (errors.length > 0) {
+    connection.query(
+      'SELECT * FROM owners; SELECT * FROM shops WHERE id = ?',
+      [id],
+      (error, results) => {
+      res.render('clinic_edit.ejs', { shop: results[1][0], owners: results[0], errors: errors });
+      }
+    )
+  } else {
+    next();
+  }
+},
+(req, res)=>{
   const id = req.params.id;
   const name = req.body.name;
   const tel = req.body.tel;
@@ -419,13 +512,36 @@ app.get('/clinic_new', (req, res)=>{
   connection.query(
     'SELECT * FROM owners',
     (error, results) => {
-      res.render('clinic_new.ejs', { owners: results })
+      res.render('clinic_new.ejs', { owners: results, errors: [] })
     }
   )
 });
 
 //  クリニック新規登録
-app.post('/clinic_new', (req, res)=>{
+app.post('/clinic_new', (req, res, next) => {
+  const id = req.params.id;
+  const name = req.body.name;
+  const tel = req.body.tel;
+  const errors = [];
+  if (name === '') {
+    errors.push('クリニック名が空です');
+  }
+  if (tel === '') {
+    errors.push('電話番号が空です');
+  }
+  if (errors.length > 0) {
+    connection.query(
+      'SELECT * FROM owners',
+      [id],
+      (error, results) => {
+      res.render('clinic_new.ejs', { owners: results, errors: errors });
+      }
+    )
+  } else {
+    next();
+  }
+},
+(req, res)=>{
   const name = req.body.name;
   const tel = req.body.tel;
   const owner_id = req.body.owner_id;
