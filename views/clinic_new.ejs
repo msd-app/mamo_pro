@@ -1,13 +1,18 @@
 <%- include('header'); %>
 <div id="form">
     <p class="form-title">クリニック登録</p>
+    <%- include('error'); %>
     <form action="/clinic_new" method="post">
         <p>クリニック名</p>
         <input type="text" name="name">
         <p>電話番号</p>
         <input type="tel" name="tel">
         <p>オーナー選択</p>
-        
+        <select name="owner_id" id="">
+          <% owners.forEach((owner)=> { %>
+            <option value= <%= owner.id %> ><%= owner.name %></option>   
+          <% }) %> 
+        </select>
         <p class="submit">
           <input type="submit" value="作成する">
         </p>
