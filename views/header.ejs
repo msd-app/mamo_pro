@@ -1,20 +1,76 @@
-<header>
-    <div class="header-nav">
-      <p><%= locals.adminName %>でログインしています。</p>
-      <ul>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+</head>
+  <body>
+      <div class="heade"> 
+        <div class="imag">
+          <img src="/statics/images/mamo-logon.png" alt="logo">
+        </div>
+        <div class="header-nav">
+      <div class="tex">
+        <a href="#"><%= locals.adminName %></a>
+        でログインしています。</div>
+        
+      <div class="login">
         <% if (locals.isLoggedIn) { %>
-          <li><a href="/logout">ログアウト</a></li>
-        <% } else { %>
-          <li><a href="/login">ログイン</a></li>
-        <% } %>
-      </ul>
+          <a href="/logout">ログアウト</a>
+          <% } else { %>
+            <a href="/login">ログイン</a>
+            <% } %>
+          </div>
+        
+      </div>
     </div>
-  </header>
+  </body>
+</html>
 
-  <style>
-  header{
-  height: 56px;
-  background-color:#00ced1;
-  border-bottom: 1px solid #f0f4f9;
-  }
-  </style>
+<style>
+*{
+  margin: 0;
+
+}
+
+    .heade{
+    width: 100%;
+    background-color: rgb(127, 236, 255);
+    height: 56px;
+    border-bottom: 1px solid skyblue;
+    }
+    img{
+        width: 10rem;
+        height:4rem;
+        object-fit:fill;
+      }
+    .imag{
+      float: left;
+    }
+    .tex{
+        margin-left: 2rem;
+        margin-top: 1rem;
+        float: left;
+      }
+      .login{
+        margin-top: 1rem;
+        margin-right: 3rem;
+        float: right;
+      }
+        a{
+
+text-decoration: none;
+
+}
+    .header-nav{
+
+      font-weight: bolder;
+      
+      
+        
+      }
+    
+  
+
+</style>
