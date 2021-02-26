@@ -73,17 +73,6 @@ app.use((req, res, next) => {
 //   next();
 // });
 
-// 全てのルーティングでセッション確認条件分岐
-// // 全てのルーティングでセッション確認条件分岐
-// app.get('*', (req,res, next) => {
-//   if (req.session.adminId === undefined) {
-//     res.render('login.ejs')
-//   }
-//   else{
-//     next()
-//   }
-// })
-
 // ログイン
 app.get('/login',(req,res)=>{
 res.render('login.ejs',{ errors: [] } );
@@ -143,15 +132,25 @@ app.get('/logout', (req, res) => {
   });
 });
 
+// 全てのルーティングでセッション確認条件分岐
+app.get('*', (req,res, next) => {
+  if (req.session.adminId === undefined) {
+    res.redirect('/login');
+  }
+  else{
+    next()
+  }
+})
+
 // postリクエスト制御
-// app.post('*', (req,res, next) => {
-//   if (req.session.adminId === undefined) {
-//     res.render('login.ejs')
-//   }
-//   else{
-//     next()
-//   }
-// })
+app.post('*', (req,res, next) => {
+  if (req.session.adminId === undefined) {
+    res.redirect('/login');
+  }
+  else{
+    next()
+  }
+})
 
 
 app.get('/dashboard',(req,res)=>{
@@ -416,8 +415,10 @@ app.post('/admin/update/:id',(req, res, next) => {
 // クリニック一覧
 app.get('/clinics', (req, res)=>{
   connection.query(
-    'SELECT * FROM shops',
+    // 'SELECT shops.id, shops.name, shops.tel, shops.owner_id, owners.name FROM owners LEFT JOIN shops ON owners.id = shops.owner_id',
+    `SELECT * FROM shops`,
     (error, results) => {
+      console.log(results)
       res.render('clinics.ejs', { shops: results })
     }
   )
