@@ -73,11 +73,8 @@ app.use((req, res, next) => {
 //   next();
 // });
 
-<<<<<<< HEAD
 // 全てのルーティングでセッション確認条件分岐
-=======
 // // 全てのルーティングでセッション確認条件分岐
->>>>>>> origin/master
 // app.get('*', (req,res, next) => {
 //   if (req.session.adminId === undefined) {
 //     res.render('login.ejs')
@@ -89,37 +86,49 @@ app.use((req, res, next) => {
 
 // ログイン
 app.get('/login',(req,res)=>{
-res.render('login.ejs');
+res.render('login.ejs',{ errors: [] } );
 });
 
 // ログイン認証機能
-app.post('/login',(req,res)=>{
+app.post('/login',(req, res, next) => {
+  console.log(req.body)
+  const email = req.body.email;
+  const password = req.body.password;
+  const errors = [];
+  if (email === '') {
+    errors.push('メールアドレスが空です');
+  }
+  if (password === '') {
+    errors.push('パスワードが空です');
+  }
+  if (errors.length > 0) {
+    res.render('login.ejs', { errors: errors });
+  } else {
+    next();
+  }
+},
+(req,res)=>{
   const email = req.body.email;
   connection.query(
     'select * from admins where email=?',
     [email],
     (error,results)=>{
-      console.log("aaaa")
       if(results[0].status === 1){
         res.redirect('/login');
-        console.log("bbb")
       }else{
         if(results.length > 0){
           const plain = req.body.password
           const hash = results[0].password
           bcrypt.compare(plain, hash, (error, isEqual) =>{ 
             if(isEqual){
-              console.log("ddd")
               req.session.adminId = results[0].id;
               req.session.adminName = results[0].name;
               res.redirect('/dashboard');
             }else{
-              console.log("fff")
               res.redirect('/login');
             }
           });
         }else{
-          console.log("ggg")
           res.redirect('/login');
         }
       }
@@ -263,11 +272,50 @@ app.get('/admins', (req,res) => {
 
 // 管理者登録ページ
 app.get('/admin_new', (req, res) => {
-  res.render('admin_new.ejs')
+  res.render('admin_new.ejs', { errors: [] })
 });
 
 // 管理者登録
-app.post('/admin_new', (req, res) => {
+app.post('/admin_new',(req, res, next) => {
+  console.log(req.body)
+  const name = req.body.name;
+  const email = req.body.email;
+  const password = req.body.password;
+  const errors = [];
+  if (name === '') {
+    errors.push('管理者名が空です');
+  }
+  if (email === '') {
+    errors.push('メールアドレスが空です');
+  }
+  if (password === '') {
+    errors.push('パスワードが空です');
+  }
+  if (errors.length > 0) {
+    res.render('admin_new.ejs', { errors: errors });
+  } else {
+    next();
+  }
+},
+(req, res, next) => {
+  console.log('メールアドレスの重複チェック');
+  const email = req.body.email;
+  const errors = [];
+  connection.query(
+    'SELECT * FROM admins WHERE email = ?',
+    [email],
+    (error, results) =>{
+      if(results.length > 0){
+        errors.push('管理者登録に失敗しました')
+        res.render('admin_new.ejs', { errors: errors });
+      }else{
+        next();
+      }
+    }
+    )
+},
+// 登録実行
+(req, res) => {
   console.log(req.body)
   const name = req.body.name;
   const email = req.body.email;
@@ -297,7 +345,7 @@ app.get('/admin/:id', (req, res) => {
   )
 });
 
-
+// 管理者編集
 app.get('/admin_edit/:id', (req, res) => {
   const id = req.params.id;
   connection.query(
@@ -305,13 +353,36 @@ app.get('/admin_edit/:id', (req, res) => {
     [id],
     (error, results) => {
       console.log(results)
-      res.render('admin_edit.ejs', { admin: results[0] });
+      res.render('admin_edit.ejs', { admin: results[0], errors:[] });
     }
   )
 });
 
 // 管理者更新
-app.post('/admin/update/:id', (req, res) => {
+app.post('/admin/update/:id',(req, res, next) => {
+  const id = req.params.id;
+  const name = req.body.name;
+  const email = req.body.email;
+  const errors = [];
+  if (name === '') {
+    errors.push('管理者名が空です');
+  }
+  if (email === '') {
+    errors.push('メールアドレスが空です');
+  }
+  if (errors.length > 0) {
+    connection.query(
+      'SELECT * FROM admins WHERE id =?',
+      [id],
+      (error, results) => {
+      res.render('admin_edit.ejs', { admin: results[0], errors: errors });
+      }
+    )
+  } else {
+    next();
+  }
+},
+(req, res) => {
   const id = req.params.id;
   const name = req.body.name;
   const email = req.body.email;
