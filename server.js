@@ -24,7 +24,8 @@ const connection = mysql.createConnection({
   host: process.env.HOST,
   user: process.env.DBUSER,
   password: process.env.PASSWORD,
-  database: process.env.DATABASE
+  database: process.env.DATABASE,
+  multipleStatements: true
 });
 
 console.log("host "+process.env.HOST)
@@ -73,14 +74,14 @@ app.use((req, res, next) => {
 // });
 
 // 全てのルーティングでセッション確認条件分岐
-app.get('*', (req,res, next) => {
-  if (req.session.adminId === undefined) {
-    res.render('login.ejs')
-  }
-  else{
-    next()
-  }
-})
+// app.get('*', (req,res, next) => {
+//   if (req.session.adminId === undefined) {
+//     res.render('login.ejs')
+//   }
+//   else{
+//     next()
+//   }
+// })
 
 // ログイン
 app.get('/login',(req,res)=>{
@@ -130,14 +131,14 @@ app.get('/logout', (req, res) => {
 });
 
 // postリクエスト制御
-app.post('*', (req,res, next) => {
-  if (req.session.adminId === undefined) {
-    res.render('login.ejs')
-  }
-  else{
-    next()
-  }
-})
+// app.post('*', (req,res, next) => {
+//   if (req.session.adminId === undefined) {
+//     res.render('login.ejs')
+//   }
+//   else{
+//     next()
+//   }
+// })
 
 
 app.get('/dashboard',(req,res)=>{
@@ -200,8 +201,7 @@ app.post('/admin_new', (req, res) => {
       'INSERT INTO admins(name, email, password) VALUES (?, ?, ?)',
       [name, email, hash],
       (error, results) => {
-        console.log(results)
-        res.render('admin_new.ejs')
+        res.redirect(`/admin/${results.insertId}`)
       }
     )
   }
@@ -290,13 +290,37 @@ app.get('/clinic/:id', (req, res)=>{
 });
 
 // クリニック編集
+// app.get('/clinic_edit/:id', (req, res)=>{
+//   const id = req.params.id;
+//   connection.query(
+//     'SELECT * FROM shops WHERE id = ?',
+//     [id],
+//     (error, results, owners) =>{
+//       res.render('clinic_edit.ejs', {shop: results[0], owners: owners})
+//     }
+//   )
+// });
+
+// クリニック編集
 app.get('/clinic_edit/:id', (req, res)=>{
   const id = req.params.id;
+  const data =[];
+  //  "'SELECT * FROM owners'"
+  // `'SELECT * FROM shops WHERE id = ?', ${[id]}`
+  console.log("表示したいid " + id)
   connection.query(
-    'SELECT * FROM shops WHERE id = ?',
+    // 'SELECT * FROM owners; SELECT * FROM shops',
+    'SELECT * FROM owners; SELECT * FROM shops WHERE id = ?',
     [id],
-    (error, results, owners) =>{
-      res.render('clinic_edit.ejs', {shop: results[0], owners: owners})
+    (error, results) => {
+      if(error){
+        console.log(error)
+      }else{
+      console.log(results[0])
+      console.log("-----------------ここから店")
+      console.log(results[1][0])
+      res.render('clinic_edit.ejs',  {shop: results[1][0], owners: results[0] } )
+    }
     }
   )
 });

@@ -7,9 +7,11 @@
         <input type="text" name="name" value="<%= shop.name %>">
         <p>電話番号</p>
         <input type="tel" name="tel" value="<%= shop.tel %>">
-        <p>オーナー</p>
-        <select name="owner_id">
-            <option value="<%= shop.owner_id %>"><%= shop.owner_id %></option>
+        <p>オーナー選択</p>
+        <select name="owner_id" id="">
+          <% owners.forEach((owner)=> { %>
+            <option value= <%= owner.id %> ><%= owner.name %></option>   
+          <% }) %> 
         </select>
         <p>有効ステータス</p>
         <% if(shop.status === 0) { %>
